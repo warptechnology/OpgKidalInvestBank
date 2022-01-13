@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using WalletService.Abstraction;
 
 namespace WalletService.Controllers
 {
@@ -11,10 +13,16 @@ namespace WalletService.Controllers
     [ApiController]
     public class WalletController : ControllerBase
     {
+        private readonly IWalletRepository _walletRepository;
+
+        public WalletController(IWalletRepository walletRepository)
+        {
+            _walletRepository = walletRepository;
+        }
+        [HttpGet("Index")]
         public async Task<IActionResult> Index()
         {
-            await Task.CompletedTask;
-            return Ok("It works");
+            return Ok(await _walletRepository.GetWalletsAsync(CancellationToken.None));
         }
     }
 }
